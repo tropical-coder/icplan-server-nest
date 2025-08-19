@@ -1,0 +1,189 @@
+{
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "resolvePackageJsonExports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2023",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@app/activity_log": [
+        "libs/activity_log/src"
+      ],
+      "@app/activity_log/*": [
+        "libs/activity_log/src/*"
+      ],
+      "@app/administrator": [
+        "libs/administrator/src"
+      ],
+      "@app/administrator/*": [
+        "libs/administrator/src/*"
+      ],
+      "@app/audience": [
+        "libs/audience/src"
+      ],
+      "@app/audience/*": [
+        "libs/audience/src/*"
+      ],
+      "@app/budget": [
+        "libs/budget/src"
+      ],
+      "@app/budget/*": [
+        "libs/budget/src/*"
+      ],
+      "@app/business_area": [
+        "libs/business_area/src"
+      ],
+      "@app/business_area/*": [
+        "libs/business_area/src/*"
+      ],
+      "@app/channel": [
+        "libs/channel/src"
+      ],
+      "@app/channel/*": [
+        "libs/channel/src/*"
+      ],
+      "@app/color": [
+        "libs/color/src"
+      ],
+      "@app/color/*": [
+        "libs/color/src/*"
+      ],
+      "@app/common": [
+        "libs/common/src"
+      ],
+      "@app/common/*": [
+        "libs/common/src/*"
+      ],
+      "@app/communication": [
+        "libs/communication/src"
+      ],
+      "@app/communication/*": [
+        "libs/communication/src/*"
+      ],
+      "@app/company": [
+        "libs/company/src"
+      ],
+      "@app/company/*": [
+        "libs/company/src/*"
+      ],
+      "@app/content_type": [
+        "libs/content_type/src"
+      ],
+      "@app/content_type/*": [
+        "libs/content_type/src/*"
+      ],
+      "@app/database": [
+        "libs/database/src"
+      ],
+      "@app/database/*": [
+        "libs/database/src/*"
+      ],
+      "@app/file": [
+        "libs/file/src"
+      ],
+      "@app/file/*": [
+        "libs/file/src/*"
+      ],
+      "@app/grid_media_contact": [
+        "libs/grid_media_contact/src"
+      ],
+      "@app/grid_media_contact/*": [
+        "libs/grid_media_contact/src/*"
+      ],
+      "@app/location": [
+        "libs/location/src"
+      ],
+      "@app/location/*": [
+        "libs/location/src/*"
+      ],
+      "@app/notification": [
+        "libs/notification/src"
+      ],
+      "@app/notification/*": [
+        "libs/notification/src/*"
+      ],
+      "@app/package": [
+        "libs/package/src"
+      ],
+      "@app/package/*": [
+        "libs/package/src/*"
+      ],
+      "@app/parent_folder": [
+        "libs/parent_folder/src"
+      ],
+      "@app/parent_folder/*": [
+        "libs/parent_folder/src/*"
+      ],
+      "@app/phase": [
+        "libs/phase/src"
+      ],
+      "@app/phase/*": [
+        "libs/phase/src/*"
+      ],
+      "@app/plan": [
+        "libs/plan/src"
+      ],
+      "@app/plan/*": [
+        "libs/plan/src/*"
+      ],
+      "@app/risk": [
+        "libs/risk/src"
+      ],
+      "@app/risk/*": [
+        "libs/risk/src/*"
+      ],
+      "@app/scheduler": [
+        "libs/scheduler/src"
+      ],
+      "@app/scheduler/*": [
+        "libs/scheduler/src/*"
+      ],
+      "@app/strategic_priority": [
+        "libs/strategic_priority/src"
+      ],
+      "@app/strategic_priority/*": [
+        "libs/strategic_priority/src/*"
+      ],
+      "@app/style": [
+        "libs/style/src"
+      ],
+      "@app/style/*": [
+        "libs/style/src/*"
+      ],
+      "@app/subscription": [
+        "libs/subscription/src"
+      ],
+      "@app/subscription/*": [
+        "libs/subscription/src/*"
+      ],
+      "@app/task": [
+        "libs/task/src"
+      ],
+      "@app/task/*": [
+        "libs/task/src/*"
+      ],
+      "@app/user": [
+        "libs/user/src"
+      ],
+      "@app/user/*": [
+        "libs/user/src/*"
+      ]
+    }
+  }
+}

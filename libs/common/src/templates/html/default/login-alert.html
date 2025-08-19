@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta content="telephone=no" name="format-detection" />
+    <title>[ICPlan] Login Alert</title>
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i" rel="stylesheet">
+  </head>
+
+  <body
+    style="
+      font-family: 'Source Sans Pro', 'helvetica neue', helvetica, arial,
+        sans-serif;
+      padding: 15px 0;
+      margin: 0;
+      background-color: #f6f6f6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-sizing: border-box;
+    "
+  >
+    <div id="container" style="width: 600px; max-width: 100%; margin: 0 auto">
+      <p
+        class="instructions"
+        style="
+          font-size: 12px;
+          color: #cccccc;
+          margin: 0;
+          padding: 20px;
+          text-align: left;
+        "
+      >
+        This is an automated message, please do not reply.
+      </p>
+      <div
+        class="wrapper"
+        style="background-color: #ffffff; border-radius: 5px; overflow: hidden"
+      >
+        <div class="logo" style="text-align: center; padding: 20px">
+          <a href="https://icplan.com">
+            <img
+              src="https://stohr.stripocdn.email/content/guids/CABINET_a09e8a8b4428f634212c48fcd8e0d501/images/71831585659843002.png"
+              alt="ICPlan Logo"
+              style="max-width: 250px"
+            />
+          </a>
+        </div>
+        <div class="content" style="padding: 20px">
+          <h2
+            style="
+              font-size: 24px;
+              color: #333333;
+              margin-top: 0;
+              font-weight: normal;
+              text-align: center;
+            "
+          >
+            Login From New IP Address
+          </h2>
+          <p style="font-size: 14px; line-height: 21px; color: #333333">
+            We've detected that your ICPlan account
+            <strong>{{Email}}</strong> was accessed from a new IP address.
+            <br /><br />
+            <strong>When: </strong>{{Time}} <br />
+            <strong>IP Address: </strong>{{IpAddress}} <br />
+            <br />
+
+            If it wasn't you, please go to ICPlan and reset your password in
+            order to protect your account.
+          </p>
+        </div>
+        <div class="button-container" style="text-align: center; padding: 15px">
+          <a
+            href="{{LoginLink}}"
+            class="button"
+            style="
+              display: inline-block;
+              text-decoration: none;
+              color: #ffffff;
+              background-color: #445cb4;
+              border-radius: 20px;
+              padding: 10px 15px;
+            "
+            >Visit your account</a
+          >
+        </div>
+      </div>
+      <div
+        class="divider"
+        style="
+          width: 420px;
+          border-bottom: 1px solid #cccccc;
+          margin: 40px auto 15px;
+        "
+      ></div>
+      <p
+        class="footer"
+        style="
+          font-size: 11px;
+          color: #333333;
+          text-align: center;
+          padding: 20px;
+        "
+      >
+        © {{currentYear}} ICPlan
+      </p>
+    </div>
+  </body>
+</html>

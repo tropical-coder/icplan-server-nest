@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Summary Plan-on-a-page</title>
+    <style>
+      @font-face {
+        font-family: "My Font";
+        src: url("https://dev.icplan.com/Moderat-Regular.4f1116020a813ca9.otf") format("opentype");
+      }
+      #container {
+        width: 1400px;
+        padding-left: 2px;
+        padding-right: 10px;
+      }
+      .official {
+        position: absolute;
+        font-family: "Arial", sans-serif;
+        font-size: 14px;
+        left: 670px;
+        top: 18px;
+      }
+      .header {
+        margin-top: 12px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .header-title {
+        font-family: "My Font", sans-serif;
+        font-size: 54px;
+        font-weight: bold;
+        color: #00a0d7;
+        display: inline;
+        margin: 0px;
+        margin-top: 12px;
+      }
+      .heading-main {
+        font-family: "My Font", sans-serif;
+        color: #004d6f;
+        font-size: 18px;
+      }
+      .heading-sub {
+        font-family: "My Font", sans-serif;
+        color: #1f1f1f;
+        font-size: 16px;
+      }
+      .header img {
+        width: 235px;
+        height: 85px;
+      }
+      table {
+        margin-top: 5px;
+        border-collapse: collapse;
+      }
+      table tr:nth-child(odd) {
+        height: 75px;
+      }
+      table tr:nth-child(even) {
+        height: 200px;
+      }
+      th,
+      td {
+        border: 1px solid #000;
+        padding: 5px;
+        text-align: left;
+        vertical-align: top;
+        width: 33.33%;
+      }
+      th {
+        background-color: #d9d9d9;
+      }
+      td {
+        font-family: "My Font", sans-serif;
+        word-break: break-all;
+      }
+      td p {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <span class="official"><strong>OFFICIAL</strong></span>
+      <div class="header">
+        <h2 class="header-title">Summary Plan-on-a-page</h2>
+        <img
+          src="https://prod-icplan-static-content-public.s3.eu-west-1.amazonaws.com/icplan-logo.png"
+          alt="Network Rail Logo"
+        />
+      </div>
+      <table>
+        <tr>
+          <th>
+            <span class="heading-main">PURPOSE</span><br /><span
+              class="heading-sub"
+              >{{purpose_subtitle}}</span
+            >
+          </th>
+          <th>
+            <span class="heading-main">AUDIENCE</span><br /><span
+              class="heading-sub"
+              >{{audience_subtitle}}</span
+            >
+          </th>
+          <th>
+            <span class="heading-main">OBJECTIVES</span><br /><span
+              class="heading-sub"
+              >{{objectives_subtitle}}</span
+            >
+          </th>
+        </tr>
+        <tr>
+          <td>{{{purpose}}}</td>
+          <td>{{{audience}}}</td>
+          <td>{{{objectives}}}</td>
+        </tr>
+        <tr>
+          <th>
+            <span class="heading-main">BARRIERS</span><br /><span
+              class="heading-sub"
+              >{{barriers_subtitle}}</span
+            >
+          </th>
+          <th>
+            <span class="heading-main">MESSAGING</span><br /><span
+              class="heading-sub"
+              >{{messaging_subtitle}}</span
+            >
+          </th>
+          <th>
+            <span class="heading-main">HOW</span><br /><span class="heading-sub"
+              >{{how_subtitle}}</span
+            >
+          </th>
+        </tr>
+        <tr>
+          <td>{{{barriers}}}</td>
+          <td>{{{messaging}}}</td>
+          <td>{{{how}}}</td>
+        </tr>
+        <tr>
+          <th>
+            <span class="heading-main">STAKEHOLDERS</span><br /><span
+              class="heading-sub"
+              >{{stakeholders_subtitle}}</span
+            >
+          </th>
+          <th>
+            <span class="heading-main">IMPACT</span><br /><span
+              class="heading-sub"
+              >{{impact_subtitle}}</span
+            >
+          </th>
+          <th>
+            <span class="heading-main">REACTION</span><br /><span
+              class="heading-sub"
+              >{{reaction_subtitle}}</span
+            >
+          </th>
+        </tr>
+        <tr>
+          <td>{{{stakeholders}}}</td>
+          <td>{{{impact}}}</td>
+          <td>{{{reaction}}}</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

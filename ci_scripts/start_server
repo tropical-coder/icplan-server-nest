@@ -1,0 +1,7 @@
+#!/bin/bash
+#sudo /etc/init.d/stunnel4 start
+#sudo stunnel /etc/stunnel/redis-cli.conf
+sleep 10
+pm2 restart all
+#sudo service nginx stop
+echo "Deployment completed"

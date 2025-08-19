@@ -1,0 +1,132 @@
+{
+        "CallerReference": "1577489212405",
+        "Aliases": {
+            "Quantity": 9,
+            "Items": [
+                "new-web.icplan.com",
+                "new.icplan.com",
+                "new-wp-staging.icplan.com",
+                "b.icplan.com",
+                "a.icplan.com",
+                "c.icplan.com",
+                "d.icplan.com",
+                "e.icplan.com",
+                "f.icplan.com"
+            ]
+        },
+        "DefaultRootObject": "",
+        "Origins": {
+            "Quantity": 1,
+            "Items": [
+                {
+                    "Id": "ELB-icplan-prod-alb-353736477",
+                    "DomainName": "icplan-prod-alb-353736477.eu-west-1.elb.amazonaws.com",
+                    "OriginPath": "",
+                    "CustomHeaders": {
+                        "Quantity": 0
+                    },
+                    "CustomOriginConfig": {
+                        "HTTPPort": 80,
+                        "HTTPSPort": 443,
+                        "OriginProtocolPolicy": "https-only",
+                        "OriginSslProtocols": {
+                            "Quantity": 3,
+                            "Items": [
+                                "TLSv1",
+                                "TLSv1.1",
+                                "TLSv1.2"
+                            ]
+                        },
+                        "OriginReadTimeout": 30,
+                        "OriginKeepaliveTimeout": 5
+                    }
+                }
+            ]
+        },
+        "OriginGroups": {
+            "Quantity": 0
+        },
+        "DefaultCacheBehavior": {
+            "TargetOriginId": "ELB-icplan-prod-alb-353736477",
+            "ForwardedValues": {
+                "QueryString": false,
+                "Cookies": {
+                    "Forward": "none"
+                },
+                "Headers": {
+                    "Quantity": 2,
+                    "Items": [
+                        "Authorization",
+                        "Host"
+                    ]
+                },
+                "QueryStringCacheKeys": {
+                    "Quantity": 0
+                }
+            },
+            "TrustedSigners": {
+                "Enabled": false,
+                "Quantity": 0
+            },
+            "ViewerProtocolPolicy": "redirect-to-https",
+            "MinTTL": 600,
+            "AllowedMethods": {
+                "Quantity": 7,
+                "Items": [
+                    "HEAD",
+                    "DELETE",
+                    "POST",
+                    "GET",
+                    "OPTIONS",
+                    "PUT",
+                    "PATCH"
+                ],
+                "CachedMethods": {
+                    "Quantity": 2,
+                    "Items": [
+                        "HEAD",
+                        "GET"
+                    ]
+                }
+            },
+            "SmoothStreaming": false,
+            "DefaultTTL": 86400,
+            "MaxTTL": 31536000,
+            "Compress": false,
+            "LambdaFunctionAssociations": {
+                "Quantity": 0
+            },
+            "FieldLevelEncryptionId": ""
+        },
+        "CacheBehaviors": {
+            "Quantity": 0
+        },
+        "CustomErrorResponses": {
+            "Quantity": 0
+        },
+        "Comment": "",
+        "Logging": {
+            "Enabled": false,
+            "IncludeCookies": false,
+            "Bucket": "",
+            "Prefix": ""
+        },
+        "PriceClass": "PriceClass_All",
+        "Enabled": true,
+        "ViewerCertificate": {
+            "ACMCertificateArn": "arn:aws:acm:us-east-1:489886345978:certificate/779ddb92-cac4-4a61-ab39-7263193827d0",
+            "SSLSupportMethod": "sni-only",
+            "MinimumProtocolVersion": "TLSv1.1_2016",
+            "Certificate": "arn:aws:acm:us-east-1:489886345978:certificate/779ddb92-cac4-4a61-ab39-7263193827d0",
+            "CertificateSource": "acm"
+        },
+        "Restrictions": {
+            "GeoRestriction": {
+                "RestrictionType": "none",
+                "Quantity": 0
+            }
+        },
+        "WebACLId": "12cd83fe-f08a-4d0b-a6af-2e407042ec18",
+        "HttpVersion": "http2",
+        "IsIPV6Enabled": true
+    }

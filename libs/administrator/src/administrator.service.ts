@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { AdministratorRepository } from './repository/administrator.repository';
 import { RedisService } from '@app/common/services/redis.service';
 import { InternalServerException } from '@aws-sdk/client-bedrock-runtime';
@@ -19,11 +19,8 @@ export class AdministratorService {
   ) {}
 
   private generateToken(redisAdmin: IRedisAdminModel): string {
-    return this.jwtService.sign(
-      redisAdmin,
-      { secret: this.configService.get<string>('SECRET') },
-    );
-  }
+    return this.jwtService.sign(JSON.stringify(redisAdmin));
+  } 
 
   private async setSession(
     key: string,
@@ -174,13 +171,13 @@ export class AdministratorService {
     await this.redisService.Delete(tokenList);
   }
 
-  public async GetAdminFromToken(token: string): Promise<IRedisAdminModel | null> {
+  public async GetAdminFromToken(token: string): Promise<IRedisAdminModel> {
     const redisAdmin = this.jwtService.decode<IRedisAdminModel>(token);
 
     const rawData = await this.redisService.Get(
       `admin:${redisAdmin.Id}:${token}`,
     );
-    if (!rawData) return null;
+    if (!rawData) throw new UnauthorizedException("Invalid token");
     return JSON.parse(rawData);
   }
 

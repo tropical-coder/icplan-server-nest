@@ -16,7 +16,7 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": true,
+    "strictNullChecks": false,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
@@ -88,6 +88,12 @@
       "@app/content_type/*": [
         "libs/content_type/src/*"
       ],
+      "@app/dashboard": [
+        "libs/dashboard/src"
+      ],
+      "@app/dashboard/*": [
+        "libs/dashboard/src/*"
+      ],
       "@app/database": [
         "libs/database/src"
       ],
@@ -100,11 +106,23 @@
       "@app/file/*": [
         "libs/file/src/*"
       ],
+      "@app/grid": [
+        "libs/grid/src"
+      ],
+      "@app/grid/*": [
+        "libs/grid/src/*"
+      ],
       "@app/grid_media_contact": [
         "libs/grid_media_contact/src"
       ],
       "@app/grid_media_contact/*": [
         "libs/grid_media_contact/src/*"
+      ],
+      "@app/key_messages": [
+        "libs/key_messages/src"
+      ],
+      "@app/key_messages/*": [
+        "libs/key_messages/src/*"
       ],
       "@app/location": [
         "libs/location/src"
@@ -148,6 +166,12 @@
       "@app/risk/*": [
         "libs/risk/src/*"
       ],
+      "@app/saved_filter": [
+        "libs/saved_filter/src"
+      ],
+      "@app/saved_filter/*": [
+        "libs/saved_filter/src/*"
+      ],
       "@app/scheduler": [
         "libs/scheduler/src"
       ],
@@ -171,6 +195,12 @@
       ],
       "@app/subscription/*": [
         "libs/subscription/src/*"
+      ],
+      "@app/tag": [
+        "libs/tag/src"
+      ],
+      "@app/tag/*": [
+        "libs/tag/src/*"
       ],
       "@app/task": [
         "libs/task/src"

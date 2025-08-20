@@ -137,6 +137,15 @@
         "tsConfigPath": "libs/content_type/tsconfig.lib.json"
       }
     },
+    "dashboard": {
+      "type": "library",
+      "root": "libs/dashboard",
+      "entryFile": "index",
+      "sourceRoot": "libs/dashboard/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/dashboard/tsconfig.lib.json"
+      }
+    },
     "database": {
       "type": "library",
       "root": "libs/database",
@@ -155,6 +164,15 @@
         "tsConfigPath": "libs/file/tsconfig.lib.json"
       }
     },
+    "grid": {
+      "type": "library",
+      "root": "libs/grid",
+      "entryFile": "index",
+      "sourceRoot": "libs/grid/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/grid/tsconfig.lib.json"
+      }
+    },
     "grid_media_contact": {
       "type": "library",
       "root": "libs/grid_media_contact",
@@ -162,6 +180,15 @@
       "sourceRoot": "libs/grid_media_contact/src",
       "compilerOptions": {
         "tsConfigPath": "libs/grid_media_contact/tsconfig.lib.json"
+      }
+    },
+    "key_messages": {
+      "type": "library",
+      "root": "libs/key_messages",
+      "entryFile": "index",
+      "sourceRoot": "libs/key_messages/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/key_messages/tsconfig.lib.json"
       }
     },
     "location": {
@@ -227,6 +254,15 @@
         "tsConfigPath": "libs/risk/tsconfig.lib.json"
       }
     },
+    "saved_filter": {
+      "type": "library",
+      "root": "libs/saved_filter",
+      "entryFile": "index",
+      "sourceRoot": "libs/saved_filter/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/saved_filter/tsconfig.lib.json"
+      }
+    },
     "scheduler": {
       "type": "library",
       "root": "libs/scheduler",
@@ -261,6 +297,15 @@
       "sourceRoot": "libs/subscription/src",
       "compilerOptions": {
         "tsConfigPath": "libs/subscription/tsconfig.lib.json"
+      }
+    },
+    "tag": {
+      "type": "library",
+      "root": "libs/tag",
+      "entryFile": "index",
+      "sourceRoot": "libs/tag/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/tag/tsconfig.lib.json"
       }
     },
     "task": {

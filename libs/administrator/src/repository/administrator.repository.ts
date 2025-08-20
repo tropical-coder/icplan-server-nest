@@ -1,10 +1,9 @@
-import { AdminModel } from "../entities/administrator.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
-import { BaseRepository } from "@app/common/base/base.repository";
 import { Repository } from "typeorm";
+import { AdminModel } from "../entities/administrator.entity";
+import { BaseRepository } from "@app/common/base/base.repository";
 
-@Injectable()
 export class AdministratorRepository extends BaseRepository<AdminModel> {
   constructor(
     @InjectRepository(AdminModel)

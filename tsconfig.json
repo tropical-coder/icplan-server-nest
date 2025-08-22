@@ -64,6 +64,12 @@
       "@app/color/*": [
         "libs/color/src/*"
       ],
+      "@app/comment": [
+        "libs/comment/src"
+      ],
+      "@app/comment/*": [
+        "libs/comment/src/*"
+      ],
       "@app/common": [
         "libs/common/src"
       ],

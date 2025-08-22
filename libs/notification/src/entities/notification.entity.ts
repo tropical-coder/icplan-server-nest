@@ -1,6 +1,6 @@
+import { BaseModel } from "@app/common/base/base.model";
+import { UserModel } from "@app/user/entities/user.entity";
 import { Entity, Column, ManyToOne, JoinColumn, Index } from "typeorm";
-import { UserModel } from "../user/UserModel";
-import { BaseModel } from "../BaseModel";
 
 @Entity("notification")
 export class NotificationModel extends BaseModel {

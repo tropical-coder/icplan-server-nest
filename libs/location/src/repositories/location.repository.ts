@@ -2,18 +2,20 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { BaseRepository } from "@app/common/base/base.repository";
-import { LocationModel } from "../../model/location/LocationModel";
-import { LocationSearchRequest } from "../../../api/controller/location/LocationRequest";
-import { GetPaginationOptions } from "../../helpers/UtilHelper";
-import { IRedisUserModel, UserRoles } from "../../model/user/UserModel";
-import { IRedisAdminModel } from "../../model/admin/AdminModel";
+import { IRedisAdminModel } from "@app/administrator/entities/administrator.entity";
+import { GetPaginationOptions } from "@app/common/helpers/misc.helper";
+import { IRedisUserModel, UserRoles } from "@app/user/entities/user.entity";
+import { LocationSearchRequest } from "@app/location/dtos/location.dto";
+import { LocationModel } from "@app/location/entities/location.entity";
 
-export class LocationRepository extends BaseRepository<[^> {
+
+@Injectable()
+export class LocationRepository extends BaseRepository<LocationModel> {
   constructor(
     @InjectRepository(LocationModel)
     private locationModelRepository: Repository<LocationModel>,
   ) {
-    super([^Repository);
+    super(locationModelRepository);
   }
 
   public async GetLocations(data, user: IRedisUserModel | IRedisAdminModel) {

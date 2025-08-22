@@ -1,16 +1,12 @@
-
-import { KeyMessagesRepository } from "../../repository/company/KeyMessagesRepository";
-import { IRedisUserModel } from "../../model/user/UserModel";
-import { CompanyRepository } from "../../repository/company/CompanyRepository";
-import { CompanyModel } from "../../model/company/CompanyModel";
-import { BadRequestException } from "routing-controllers";
-import { KeyMessagesModel } from "../../model/company/KeyMessagesModel";
-import { UserRepository } from "../../repository/user/UserRepository";
-import { SubscriptionService } from "../subscription/SubscriptionService";
-import { SubscriptionRepository } from "../../repository/subscription/SubscriptionRepository";
-import { KeyMessaging } from "../../../admin/controller/subscription/SubscriptionRequest";
 import { IsNull } from "typeorm";
-import { GetKMRequest, UpdateKMRequest } from "../../../api/controller/key_messages/KeyMessagesRequest";
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { KeyMessagesRepository } from "./repositories/key_messages.repository";
+import { CompanyRepository } from "@app/company/repositories/company.repository";
+import { UserRepository } from "@app/user/repositories/user.repository";
+import { SubscriptionRepository } from "@app/subscription/repositories/subscription.repository";
+import { GetKMRequest, UpdateKMRequest } from "./dtos/key_messages.dto";
+import { IRedisUserModel } from "@app/user/entities/user.entity";
+import { KeyMessagesModel, KeyMessaging } from "./entities/key_messages.entity";
 
 @Injectable()
 export class KeyMessagesService {

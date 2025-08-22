@@ -1,31 +1,23 @@
-// import {
-//   Column,
-//   Entity,
-//   OneToMany,
-//   JoinColumn,
-//   ManyToMany,
-//   JoinTable,
-//   ManyToOne,
-//   OneToOne,
-//   AfterLoad,
-// } from "typeorm";
-// import { BaseModel } from "../BaseModel";
-// import { CompanyModel } from "../company/CompanyModel";
-// import { LocationModel } from "../location/LocationModel";
-// import { UserBusinessAreaPermissionModel } from "./business_area_permission/UserBusinessAreaPermissionModel";
-// import { PlanPermissionModel } from "../plan/PlanPermissionModel";
-// import { CommunicationPermissionModel } from "../communication/CommunicationPermissionModel";
-// import { SocialIntegrationModel } from "../social-intergration/SocialIntegrationModel";
-// import { MfaSecretModel } from "../mfa_secret/MfaSecretModel";
-// import { NotificationModel } from "../notification/NotificationModel";
-// import { UserSettingModel } from "./UserSettingModel";
-// import { PinFolderModel } from "../parent_folder/PinFolderModel";
-// import { GetFileKey, GetAWSSignedUrl } from "../../service/aws/MediaService";
-// import { SavedFilterModel } from "../saved_filter/SavedFilterModel";
-// import { PinnedSavedFilterModel } from "../saved_filter/PinnedSavedFilterModel";
-// import { PhaseModel } from "../phase/PhaseModel";
-// import { NotificationRuleModel } from "../notification/NotificationRuleModel";
-// import { UserActivityLogModel } from "../activity_log/UserActivityLogModel";
+import {
+  Column,
+  Entity,
+  OneToMany,
+  JoinColumn,
+  ManyToMany,
+  JoinTable,
+  ManyToOne,
+  OneToOne,
+  AfterLoad,
+} from "typeorm";
+import { BaseModel } from "@app/common/base/base.model";
+import { CompanyModel } from "@app/company/entities/company.entity";
+import { LocationModel } from "@app/location/entities/location.entity";
+import { UserBusinessAreaPermissionModel } from "@app/business_area/entities/user_business_area_permission.entity";
+import { PlanPermissionModel } from "@app/plan/entities/plan_permission.entity";
+import { CommunicationPermissionModel } from "@app/communication/entities/communication.entity";
+import { SocialIntegrationModel } from "@app/social_integration/entities/social_integration.entity";
+import { NotificationModel } from "@app/notification/entities/notification.entity";
+import { UserSettingModel } from "./user_setting.entity";
 
 export enum UserRoles {
   Owner = "owner",
@@ -237,19 +229,11 @@ export class UserModel extends BaseModel {
   })
   locations: LocationModel[];
 
-  @ManyToMany((type) => SkillModel)
-  @JoinTable({
-    name: "user_skill",
-    joinColumn: { name: "user_id" },
-    inverseJoinColumn: { name: "skill_id" },
-  })
-  skills: SkillModel[];
-
-  @OneToMany(
-    (type) => SocialIntegrationModel,
-    (socialIntegrationModel) => socialIntegrationModel.user
-  )
-  social_integration: SocialIntegrationModel;
+  // @OneToMany(
+  //   (type) => SocialIntegrationModel,
+  //   (socialIntegrationModel) => socialIntegrationModel.user
+  // )
+  // social_integration: SocialIntegrationModel;
 
   @OneToMany(
     (type) => NotificationModel,

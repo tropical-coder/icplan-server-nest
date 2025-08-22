@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, Unique } from "typeorm";
-import { BaseModel } from "../BaseModel";
-import { UserSettingModel } from "../user/UserSettingModel";
+import { BaseModel } from "@app/common/base/base.model";
+import { UserSettingModel } from "@app/user/entities/user_setting.entity";
 
 @Entity("color")
 @Unique(["company_id", "color"])

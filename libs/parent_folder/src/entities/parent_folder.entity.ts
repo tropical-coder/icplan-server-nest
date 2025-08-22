@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, JoinColumn, ManyToOne, AfterLoad } from "typeorm";
 import { BaseModel } from "../BaseModel";
 import { PlanModel } from "../plan/PlanModel";
-import { PinFolderModel } from "./PinFolderModel";
+import { PinFolderModel } from "./pin_folder.entity";
 
 @Entity("parent_folder")
 export class ParentFolderModel extends BaseModel {

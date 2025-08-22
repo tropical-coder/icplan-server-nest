@@ -45,7 +45,7 @@ import { isArray } from "util";
 import { CheckSubDomain } from "../../../app/helpers/UtilHelper";
 import { GetParentFolderAndPlanRequest } from "../parent_folder/ParentFolderRequest";
 import { InjectSubdomainMiddleware } from "../../../app/middleware/InjectSubdomainMiddleware";
-import { UserBusinessAreasSearchRequest } from "../user/UserRequest";
+import { UserBusinessAreasSearchRequest } from "../user/user.dto";
 
 @ApiTags()
 @Controller()

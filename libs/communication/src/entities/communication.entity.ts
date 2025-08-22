@@ -21,13 +21,12 @@ import { PlanModel } from "../plan/PlanModel";
 import { UserModel } from "../user/UserModel";
 import { TaskModel } from "../task/TaskModel";
 import { CommunicationFilesModel } from "./CommunicationFilesModel";
-import { CurrencyModel } from "../currency/CurrencyModel";
 import { StrategicPriorityModel } from "../strategic_priority/StrategicPriorityModel";
-import { CommunicationPermissionModel } from "./CommunicationPermissionModel";
+import { CommunicationPermissionModel } from "./communication_permission.entity";
 import { CommunicationSocialPostsModel } from "./CommunicationSocialPostsModel";
 import { ContentTypeModel } from "../content_type/ContentTypeModel";
 import { CommunicationGridModel } from "./CommunicationGridModel";
-import { CommunicationTeamModel } from "./CommunicationTeamModel";
+import { CommunicationTeamModel } from "./communication_team.entity";
 import { PhaseModel } from "../phase/PhaseModel";
 import { CompanyModel } from "../company/CompanyModel";
 import { BudgetModel } from "../budget/BudgetModel";
@@ -149,14 +148,7 @@ export class CommunicationModel extends BaseModel {
     length: 50,
     default: CommunicationStatus.InProgress,
   })
-  status: CommunicationStatus;
-
-  @Column({
-    name: "currency_id",
-    type: "int",
-    nullable: true,
-  })
-  currency_id: number;
+  status: CommunicationStatus; 
 
   @Column({
     name: "objectives",
@@ -333,10 +325,6 @@ export class CommunicationModel extends BaseModel {
     cascade: ["insert"],
   })
   tasks: TaskModel[];
-
-  @ManyToOne((type) => CurrencyModel)
-  @JoinColumn({ name: "currency_id" })
-  currency: CurrencyModel;
 
   @OneToMany(
     (Type) => CommunicationFilesModel,

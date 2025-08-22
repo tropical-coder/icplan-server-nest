@@ -6,9 +6,9 @@ import {
   JoinTable,
   ManyToOne,
 } from "typeorm";
-import { BaseModel } from "../BaseModel";
-import { BusinessAreaModel } from "../business_area/BusinessAreaModel";
-import { CompanyModel } from "../company/CompanyModel";
+import { BaseModel } from "@app/common/base/base.model";
+import { BusinessAreaModel } from "@app/business_area/entities/business_area.entity";
+import { CompanyModel } from "@app/company/entities/company.entity";
 
 @Entity("channel")
 export class ChannelModel extends BaseModel {

@@ -5,7 +5,7 @@ import { KeyMessaging } from "../entities/key_messages.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { IRedisUserModel } from "@app/user/entities/user.entity";
-import { GetKMRequest } from "../dto/key_messages.dto";
+import { GetKMRequest } from "../dtos/key_messages.dto";
 
 export class KeyMessagesRepository extends BaseRepository<KeyMessagesModel> {
   constructor(

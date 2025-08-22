@@ -2,9 +2,9 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { BaseRepository } from "@app/common/base/base.repository";
-import { CommentModel } from "../../model/comment/CommentModel";
-import { GetCommentsRequest } from "../../../api/controller/comment/CommentRequest";
-import { IRedisUserModel } from "../../model/user/UserModel";
+import { CommentModel } from "../entities/comment.entity";
+import { GetCommentsRequest } from "../dto/comment.dto";
+import { IRedisUserModel } from "@app/user/entities/user.entity";
 
 @Injectable()
 export class CommentRepository extends BaseRepository<CommentModel> {

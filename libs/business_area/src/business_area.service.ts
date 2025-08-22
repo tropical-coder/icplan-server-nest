@@ -1,23 +1,14 @@
-import { UserBusinessAreaPermissionRepository } from "../../repository/user/business_area_permission/UserBusinessAreaPermissionRepository";
-import { BadRequestException } from "routing-controllers";
-import { BusinessAreaRepository } from "../../repository/business_area/BusinessAreaRepository";
-
-import { BusinessAreaModel } from "../../model/business_area/BusinessAreaModel";
-import {
-  CreateBusinessAreaRequest,
-  UpdateBusinessAreaRequest,
-  BusinessAreaSearchRequest,
-  UpdateBusinessAreasRequest,
-  CreateSubBusinessAreaRequest,
-  GetBusinessAreasRequest,
-} from "../../../api/controller/business_area/BusinessAreaRequest";
-import { PaginationParam } from "../../controller/base/BaseRequest";
 import { In } from "typeorm";
-import { UserBusinessAreasSearchRequest } from "../../../api/controller/user/UserRequest";
-import { IRedisUserModel } from "../../model/user/UserModel";
-import { DomainConstants } from "../../constant/DomainConstants";
-import { UserPermission } from "../../model/user/business_area_permission/UserBusinessAreaPermissionModel";
-import { CompanySettingsService } from "../company/CompanySettingsService";
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { DomainConstants } from "@app/common/constants/domain.constant";
+import { CompanySettingsService } from "@app/company/company.settings.service";
+import { UserBusinessAreasSearchRequest } from "@app/user/dtos/user.dto";
+import { IRedisUserModel } from "@app/user/entities/user.entity";
+import { CreateBusinessAreaRequest, CreateSubBusinessAreaRequest, UpdateBusinessAreaRequest, UpdateBusinessAreasRequest, GetBusinessAreasRequest, BusinessAreaSearchRequest } from "./dtos/business_area.dto";
+import { BusinessAreaModel } from "./entities/business_area.entity";
+import { UserPermission } from "./entities/user_business_area_permission.entity";
+import { BusinessAreaRepository } from "./repositories/business_area.repository";
+import { UserBusinessAreaPermissionRepository } from "./repositories/user_business_area_permission.repository";
 
 @Injectable()
 export class BusinessAreaService {

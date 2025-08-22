@@ -1,44 +1,16 @@
-import {
-  IRedisUserModel,
-  UserRoles,
-} from "../../../app/model/user/UserModel";
+import { ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, Req, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { ApiAddUserRequest, ChangePasswordRequest, ConfigureMfa, DeleteUsersRequest, SetPasswordRequest, UpdateLoggedInUserRequest, UpdateTooltipRequest, UpdateUserFiltersRequest, UpdateUserRequest, UserBusinessAreasSearchRequest, UserSearchRequest, VerifyMfaConfiguration } from "@app/user/dtos/user.dto";
+import { UserService } from "@app/user";
+import { Authorized } from "@app/common/decorators/authorized.decorator";
+import { CurrentUser } from "@app/common/decorators/current-user.decorator";
+import { GetMulterObj } from "@app/common/helpers/media.helper";
+import { UserRoles } from "@app/user/entities/user.entity";
+import type { IRedisUserModel } from "@app/user/entities/user.entity";
+import { FileInterceptor } from "@nestjs/platform-express";
+import type { Request } from "express";
 
-import { Request, Response } from "express";
-import {
-  UpdateUserRequest,
-  ChangePasswordRequest,
-  AddUserRequest,
-  DeleteUsersRequest,
-  UserSearchRequest,
-  SetPasswordRequest,
-  UpdateLoggedInUserRequest,
-  UpdateUserFiltersRequest,
-  UpdateTooltipRequest,
-  UserBusinessAreasSearchRequest,
-  ConfigureMfa,
-  VerifyMfaConfiguration,
-} from "./UserRequest";
-import { UserService } from "../../../app/service/user/UserService";
-import {
-  Body,
-  Post,
-  Get,
-  Res,
-  JsonController,
-  QueryParams,
-  CurrentUser,
-  Put,
-  Delete,
-  Param,
-  Req,
-  UploadedFile,
-  Patch,
-} from "routing-controllers";
-import { Authorized } from "../../../app/decorator/Authorized";
-import { GetMulterObj } from "../../../app/service/aws/MediaService";
-import { ImageMimeTypes } from "../../../app/service/aws/ImageMimeTypes";
-
-@ApiTags()
+@ApiTags("User")
 @Controller()
 export class UserController {
   constructor(private userService: UserService) {}
@@ -46,11 +18,10 @@ export class UserController {
   @Authorized(UserRoles.Owner, UserRoles.Admin)
   @Post("/user/add")
   async AddUserToCompany(
-    @Body() data: AddUserRequest,
+    @Body() data: ApiAddUserRequest,
     @CurrentUser()
     user: IRedisUserModel,
-    @Req() req: Request,
-    @Res() res: Response
+    @Req() req: Request
   ) {
     data.email = data.email.toLowerCase();
     const userLogginInfo = await this.userService.AddUser(req, data, user);
@@ -62,9 +33,7 @@ export class UserController {
   async UpdateUserByUserId(
     @Param("userId") userId: number,
     @Body() data: UpdateUserRequest,
-    @CurrentUser()
-    user: IRedisUserModel,
-    @Res() res: Response
+    @CurrentUser() user: IRedisUserModel
   ) {
     data.email = data.email.toLowerCase();
     const updatedUser = await this.userService.UpdateUser(userId, data, user);
@@ -75,9 +44,7 @@ export class UserController {
   @Put("/user")
   async UpdateLoggedInUser(
     @Body() data: UpdateLoggedInUserRequest,
-    @CurrentUser()
-    user: IRedisUserModel,
-    @Res() res: Response
+    @CurrentUser() user: IRedisUserModel
   ) {
     const updatedUser = await this.userService.UpdateLoggedInUser(data, user);
     return updatedUser;
@@ -91,8 +58,7 @@ export class UserController {
   async UpdateUserFilters(
     @Body() data: UpdateUserFiltersRequest,
     @CurrentUser()
-    user: IRedisUserModel,
-    @Res() res: Response
+    user: IRedisUserModel
   ) {
     const updatedUser = await this.userService.UpdateUserFilters(data, user);
     return updatedUser;
@@ -102,9 +68,7 @@ export class UserController {
   @Put("/user/tooltip")
   async UpdateUserTooltip(
     @Body() data: UpdateTooltipRequest,
-    @CurrentUser()
-    user: IRedisUserModel,
-    @Res() res: Response
+    @CurrentUser() user: IRedisUserModel
   ) {
     const updatedUser = await this.userService.UpdateUserTooltip(data, user);
     return updatedUser;
@@ -114,9 +78,7 @@ export class UserController {
   @Post("/change-password")
   async ChangePassword(
     @Body() data: ChangePasswordRequest,
-    @CurrentUser()
-    user: IRedisUserModel,
-    @Res() res: Response
+    @CurrentUser() user: IRedisUserModel
   ) {
     const userLogginInfo = await this.userService.ChangePassword(data, user);
     return userLogginInfo;
@@ -126,9 +88,7 @@ export class UserController {
   @Get("/users")
   async GetCompanyUsersList(
     @Query() data: UserSearchRequest,
-    @CurrentUser()
-    user: IRedisUserModel,
-    @Res() res: Response
+    @CurrentUser()  user: IRedisUserModel
   ) {
     if (data.business_area_permission) {
       data.business_area_permission = Array.isArray(
@@ -145,9 +105,7 @@ export class UserController {
   @Get("/users/filter")
   async GetUsersForFilter( 
     @Query() data: UserSearchRequest,
-    @CurrentUser()
-    user: IRedisUserModel,
-    @Res() res: Response
+    @CurrentUser() user: IRedisUserModel
   ) {
     if (data.business_area_permission) {
       data.business_area_permission = Array.isArray(
@@ -164,9 +122,7 @@ export class UserController {
   @Delete("/user/:userId([0-9]+)")
   async DeleteSingleUser(
     @Param("userId") userId: number,
-    @CurrentUser()
-    user: IRedisUserModel,
-    @Res() res: Response
+    @CurrentUser()  user: IRedisUserModel
   ) {
     const users = await this.userService.DeleteUser(userId, user);
     return users;
@@ -176,20 +132,17 @@ export class UserController {
   @Post("/user/delete")
   async DeleteBulkUsers(
     @Body() data: DeleteUsersRequest,
-    @CurrentUser()
-    user: IRedisUserModel,
-    @Res() res: Response
+    @CurrentUser() user: IRedisUserModel
   ) {
     const userLogginInfo = await this.userService.DeleteUsers(data, user);
     return userLogginInfo;
   }
 
   @Authorized()
+  @UseInterceptors(FileInterceptor('image', GetMulterObj()))
   @Post("/user/image")
   async UploadUserImage(
-    @UploadedFile("image", { required: true, options: GetMulterObj(ImageMimeTypes) })
-    image,
-    @Res() res: Response,
+    @UploadedFile() image: Express.Multer.File,
     @CurrentUser()
     user: IRedisUserModel
   ) {
@@ -200,9 +153,7 @@ export class UserController {
   @Authorized()
   @Delete("/user/image")
   async RemoveUserImage(
-    @Res() res: Response,
-    @CurrentUser()
-    user: IRedisUserModel
+    @CurrentUser() user: IRedisUserModel
   ) {
     const userInfo = await this.userService.RemoveUserImage(user);
     return userInfo;
@@ -212,8 +163,7 @@ export class UserController {
   async SetPassword(
     @Body() data: SetPasswordRequest,
     @Req() req: Request,
-    @Param("token") token: string,
-    @Res() res: Response
+    @Param("token") token: string
   ) {
     const response = await this.userService.SetPassword(req, data, token);
     return response;
@@ -223,9 +173,7 @@ export class UserController {
   @Get("/user/business-areas")
   async GetUserBusinessAreas(
     @Query() filter: UserBusinessAreasSearchRequest,
-    @Res() res: Response,
-    @CurrentUser()
-    user: IRedisUserModel
+    @CurrentUser() user: IRedisUserModel
   ) {
     const businessAreas = await this.userService.GetUserBusinessAreas(
       filter,
@@ -238,9 +186,7 @@ export class UserController {
   @Patch("/user/configure-mfa")
   async ConfigureMfa(
     @Body() data: ConfigureMfa,
-    @CurrentUser()
-    user: IRedisUserModel,
-    @Res() res: Response
+    @CurrentUser() user: IRedisUserModel
   ) {
     const updatedUser = await this.userService.ConfigureMfa(data, user);
     return updatedUser;
@@ -251,9 +197,7 @@ export class UserController {
   async ConfigureMfaForUser(
     @Param("userId") userId: number,
     @Body() data: ConfigureMfa,
-    @CurrentUser()
-    user: IRedisUserModel,
-    @Res() res: Response
+    @CurrentUser()  user: IRedisUserModel
   ) {
     const updatedUser = await this.userService.ConfigureMfa(data, user, userId);
     return updatedUser;
@@ -263,9 +207,7 @@ export class UserController {
   @Post("/user/verify-mfa-configuration")
   async VerifyMfaConfiguration(
     @Body() data: VerifyMfaConfiguration,
-    @CurrentUser()
-    user: IRedisUserModel,
-    @Res() res: Response
+    @CurrentUser() user: IRedisUserModel
   ) {
     const updatedUser = await this.userService.VerifyMfaConfiguration(
       user,
@@ -277,9 +219,7 @@ export class UserController {
   @Authorized()
   @Put("/user/key-messages/mark-as-read")
   async MarkKeyMessagesAsRead(
-    @CurrentUser()
-    user: IRedisUserModel,
-    @Res() res: Response
+    @CurrentUser()  user: IRedisUserModel
   ) {
     await this.userService.MarkKeyMessagesAsRead(user);
     return true;

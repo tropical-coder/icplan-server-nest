@@ -15,10 +15,10 @@ import {
   Min,
   ValidateIf,
 } from "class-validator";
-import { Transform, Type } from "class-transformer";
+import { Transform } from "class-transformer";
+import { PaginationParam } from "@app/common/base/base.dto";
 import { PackageType } from "@app/package/entities/package.entity";
-import { CalendarFormat, DateFormat, DefaultCalendarView, SecondaryCalendarView } from "../entities/company.entity";
-import { PaginationParam } from "@app/common/base/base.request";
+import { CalendarFormat, DateFormat, DefaultCalendarView, SecondaryCalendarView } from "@app/company/entities/company.entity";
 
 export class GetCompaniesRequest extends PaginationParam {
   @IsOptional()
@@ -314,4 +314,42 @@ export class UpdatePOPSubtitlesRequest {
   @IsString()
   @Length(1, 120)
   reaction: string;
+}
+
+export class UpdateCompanyRequest {
+  @IsOptional() low_color: string;
+
+  @IsOptional() high_color: string;
+
+  @IsOptional()
+  @IsInt()
+  high_frequency: number;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  is_mfa_enabled: boolean;
+
+  @IsOptional()
+  @IsInt()
+  notification_before_days: number;
+
+  @IsOptional()
+  @IsBoolean()
+  notification_enabled: boolean;
+
+  @IsOptional()
+  @IsISO31661Alpha2()
+  @Transform(({ value }) => value.toUpperCase())
+  country_code: string;
+}
+
+export class AddBasicConfigurationRequest {
+  @IsString()
+  company_name: string;
+
+  @IsString()
+  @Matches(/^[A-Za-z]+\.?(?:[ '-][A-Za-z]+\.?)*$/, {
+    message: "Invalid full name"
+  })
+  full_name: string;
 }

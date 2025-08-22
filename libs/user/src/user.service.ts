@@ -1,35 +1,39 @@
 import { Request } from "express";
 import * as RequestIp from "request-ip";
-const speakeasy = require("speakeasy");
-const qrcode = require("qrcode");
+import * as speakeasy from "speakeasy";
+import * as qrcode from "qrcode";
 
-import {
-  UserModel,
-  IRedisUserModel,
-  UserRoles,
-} from "../../model/user/UserModel";
-import { Hashpassword, Comparepassword, DeepClone, SnakeCaseToNormal, CheckSubDomain, GetVerificationCode, CheckDisposableEmail } from "../../helpers/UtilHelper";
 import { sign, decode, verify } from "jsonwebtoken";
 import * as crypto from "crypto";
-import { CompanyUserLicenseModel } from "../../model/company/CompanyUserLicenseModel";
-import SendyHelper from "../../helpers/SendyHelper";
-import { UserPermission } from "../../model/user/business_area_permission/UserBusinessAreaPermissionModel";
-import {
-  GetAllUsersRequest,
-  RevokeMfa,
-} from "../../../admin/controller/user/UserRequest";
-import { MfaSecretRepository } from "../../repository/mfa_secret/MfaSecretRepository";
-import { MfaSecretModel } from "../../model/mfa_secret/MfaSecretModel";
-import * as Sentry from "@sentry/node";
-import { UserSettingRepository } from "../../repository/user/UserSettingRepository";
-import { UserSettingModel } from "../../model/user/UserSettingModel";
-import { CompanyRepository } from "../../repository/company/CompanyRepository";
-import { ColorRepository } from "../../repository/color/ColorRepository";
-import { NotificationService } from "../notification/NotificationService";
-import { NotificationConstants } from "../../constant/NotificationConstants";
-import { KeyMessagesRepository } from "../../repository/company/KeyMessagesRepository";
-import { BadRequestException, Injectable, NotAcceptableException, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, ConflictException, Injectable, NotAcceptableException, UnauthorizedException, InternalServerErrorException } from "@nestjs/common";
 import { RedisService } from "@app/common/services/redis.service";
+import { ApiAddUserRequest, ChangePasswordRequest, ConfigureMfa, DeleteUsersRequest, GetAllUsersRequest, MfaDetails, RevokeMfa, SetPasswordRequest, UpdateLoggedInUserRequest, UpdateTooltipRequest, UpdateUserFiltersRequest, UpdateUserRequest, UserSearchRequest } from "./dtos/user.dto";
+import { ConfigService } from "@nestjs/config";
+import { DeleteAWSFile, GetAWSSignedUrl, GetFileKey } from "@app/common/helpers/media.helper";
+import { BusinessAreaService } from "@app/business_area";
+import { UserBusinessAreaPermissionRepository } from "@app/business_area/repositories/user_business_area_permission.repository";
+import { MailService } from "@app/common/services/mail.service";
+import { CompanyUserLicenseRepository } from "@app/company/repositories/company_user_license.repository";
+import { LocationService } from "@app/location";
+import { SavedFilterService } from "@app/saved_filter";
+import { SubscriptionService } from "@app/subscription";
+import { In, IsNull } from "typeorm";
+import { RegisterCompanyRequest, LoginRequest, ForgotPasswordRequest, ResetPasswordRequest, ResendVerificationCodeRequest, VerifyEmailRequest, MFALoginRequest } from "./dtos/auth.dto";
+import { UserRepository } from "./repositories/user.repository";
+import { UserSettingRepository } from "./repositories/user_setting.repository";
+import { NotificationService } from "@app/notification";
+import { KeyMessagesRepository } from "@app/key_messages/repositories/key_messages.repository";
+import { UserPermission } from "@app/business_area/entities/user_business_area_permission.entity";
+import { ColorRepository } from "@app/color/repositories/color.repository";
+import { NotificationConstants } from "@app/common/constants/notification.constant";
+import { CompanyRepository } from "@app/company/repositories/company.repository";
+import { MfaSecretModel } from "libs/mfa_secret/src/entities/mfa_secret.entity";
+import { MfaSecretRepository } from "libs/mfa_secret/src/repositories/mfa_secret.repository";
+import { UserRoles, UserModel, IRedisUserModel } from "./entities/user.entity";
+import { UserSettingModel } from "./entities/user_setting.entity";
+import { PlanPermissionRepository } from "@app/plan/repositories/plan_permission.repository";
+import { CommunicationPermissionRepository } from "@app/communication/repositories/communication_permission.repository";
+import { Hashpassword, CheckSubDomain, DeepClone, SnakeCaseToNormal, CheckDisposableEmail, Comparepassword, GetVerificationCode } from "@app/common/helpers/misc.helper";
 
 @Injectable()
 export class UserService {
@@ -39,7 +43,7 @@ export class UserService {
     private userBusinessAreaPermissionRepository: UserBusinessAreaPermissionRepository,
     private companyUserLicenseRepository: CompanyUserLicenseRepository,
     private planPermissionRepository: PlanPermissionRepository,
-    private CommunicationPermissionRepository: CommunicationPermissionRepository,
+    private communicationPermissionRepository: CommunicationPermissionRepository,
     private locationService: LocationService,
     private businessAreaService: BusinessAreaService,
     private subscriptionService: SubscriptionService,
@@ -51,6 +55,7 @@ export class UserService {
     private colorRepository: ColorRepository,
     private notificationService: NotificationService,
     private keyMessagesRepository: KeyMessagesRepository,
+    private configService: ConfigService,
   ) { }
 
   private async setSession(
@@ -62,7 +67,7 @@ export class UserService {
     await this.redisService.Set(
       token,
       JSON.stringify({ Id: userId, company_id: company_id, role }),
-      +appEnv("SESSION_TIMEOUT", 43200)
+      +this.configService.get("SESSION_TIMEOUT", 43200)
     );
 
     let tokens = JSON.parse(await this.redisService.Get(`user-${userId}`));
@@ -70,7 +75,7 @@ export class UserService {
     if (!tokens) {
       tokens = [];
     }
-    let maxLength = appEnv("MAX_LOGIN_TOKENS", 5);
+    let maxLength = this.configService.get("MAX_LOGIN_TOKENS", 5);
     if (tokens.length >= maxLength) {
       await this.deleteExceedingTokens(tokens, maxLength);
     }
@@ -80,7 +85,7 @@ export class UserService {
     await this.redisService.Set(
       `user-${userId}`,
       JSON.stringify(tokens),
-      +appEnv("SESSION_TIMEOUT", 43200)
+      +this.configService.get("SESSION_TIMEOUT", 43200)
     );
     return true;
   }
@@ -133,7 +138,7 @@ export class UserService {
     try {
       decode = !!verify(
         token,
-        user.password ? user.password : appEnv("SECRET")
+        user.password ? user.password : this.configService.get("SECRET")
       );
     } catch (err) {
       decode = false;
@@ -160,7 +165,7 @@ export class UserService {
 
   private async UpdateUserPlanPermission(user: UserModel) {
     // Delete existing permissions
-    await this.planPermissionRepository.Delete({ user_id: user.Id }, false);
+    await this.planPermissionRepository.Delete({ user_id: user.Id });
 
     // Add User Plan permission by Business area with user selected BA's
     await this.planPermissionRepository.AddUserPlanPermission(
@@ -175,17 +180,14 @@ export class UserService {
 
   private async UpdateUserCommunicationPermission(user: UserModel) {
     // Delete existing permissions
-    await this.CommunicationPermissionRepository.Delete(
-      { user_id: user.Id },
-      false
-    );
+    await this.communicationPermissionRepository.Delete({ user_id: user.Id });
 
     // Add User Plan permission by Business area with user selected BA's
-    await this.CommunicationPermissionRepository.AddUserCommunicationPermission(
+    await this.communicationPermissionRepository.AddUserCommunicationPermission(
       user,
       UserPermission.Read
     );
-    await this.CommunicationPermissionRepository.AddUserCommunicationPermission(
+    await this.communicationPermissionRepository.AddUserCommunicationPermission(
       user,
       UserPermission.Edit
     );
@@ -301,7 +303,7 @@ export class UserService {
   public createFPToken(user) {
     return sign(
       { Id: user.Id },
-      user.password ? user.password : appEnv("SECRET"),
+      user.password ? user.password : this.configService.get("SECRET"),
       { expiresIn: "72h" }
     );
   }
@@ -359,7 +361,7 @@ export class UserService {
 
   public async AddUser(
     req,
-    data: AddUserRequest | Partial<AddUserRequest>,
+    data: ApiAddUserRequest | Partial<ApiAddUserRequest>,
     user
   ): Promise<UserModel> {
     const userModelPromise = this.userRepository.FindOne({
@@ -412,22 +414,20 @@ export class UserService {
 
     /* Check if user already exists in app */
     if (userModel) {
-      throw new ConflictError("Email is already registered.");
+      throw new ConflictException("Email is already registered.");
     }
 
     const { readonly_user_limit, normal_user_limit } =
       subscriptionModel.features;
     if (data.role == UserRoles.ReadonlyUser) {
       if (readonly_user_limit && readonly_user_limit <= readOnlyUsersCount) {
-        throw new HttpError(
-          ResponseCode.BAD_REQUEST,
+        throw new BadRequestException(
           "You have reached maximum users limit. Contact support to increase limit."
         );
       }
     } else {
       if (normal_user_limit < userCount - readOnlyUsersCount) {
-        throw new HttpError(
-          ResponseCode.BAD_REQUEST,
+        throw new BadRequestException(
           "The company seats are full. Buy more seats to add more users."
         );
       }
@@ -533,7 +533,7 @@ export class UserService {
       to: data.email,
       subject: "Welcome to ICPlan",
       from: "no-reply@icplan.com",
-      bcc: appEnv("SMTP_BCC"),
+      bcc: this.configService.get("SMTP_BCC"),
     };
     this.mailService.SendMail(
       "welcome.html",
@@ -564,8 +564,7 @@ export class UserService {
     try {
       decoded = decode(token);
       if (!decoded) {
-        throw new HttpError(
-          ResponseCode.BAD_REQUEST,
+        throw new BadRequestException(
           "Setting password link is invalid or has expired."
         );
       }
@@ -619,12 +618,6 @@ export class UserService {
     user.image_url = imageUrl;
     delete user["password"];
 
-    SendyHelper.SubscribeUserToSendyList({
-      ...data,
-      full_name: user.full_name,
-      email: user.email,
-    });
-
     const loginToken = this.generateToken(user.Id, user.company_id);
     await this.setSession(loginToken, user.Id, user.company_id, user.role);
 
@@ -636,7 +629,7 @@ export class UserService {
   }
 
   public async SignUp(
-    data: AddUserRequest | Partial<AddUserRequest> | RegisterCompanyRequest,
+    data: ApiAddUserRequest | Partial<ApiAddUserRequest> | RegisterCompanyRequest,
     companyId: number
   ): Promise<UserModel> {
     let userModel: UserModel = await this.userRepository.FindOne({
@@ -646,10 +639,10 @@ export class UserService {
 
     /* Check if user already exists in app */
     if (userModel) {
-      throw new ConflictError("Email is already registered.");
+      throw new ConflictException("Email is already registered.");
     }
 
-    let user = await this.createUser(data as AddUserRequest, companyId);
+    let user = await this.createUser(data as ApiAddUserRequest, companyId);
 
     return user;
   }
@@ -1247,7 +1240,7 @@ export class UserService {
       let imageUrl = await GetAWSSignedUrl(key);
       return { Id: user.Id, image_url: imageUrl };
     } catch (error) {
-      throw new InternalServerError(error);
+      throw new InternalServerErrorException(error.message || 'An error occurred while uploading user image');
     }
   }
 
@@ -1344,8 +1337,7 @@ export class UserService {
     try {
       decoded = decode(token);
       if (!decoded) {
-        throw new HttpError(
-          ResponseCode.BAD_REQUEST,
+        throw new BadRequestException(
           "Your reset password link is invalid or has expired."
         );
       }
@@ -1478,7 +1470,7 @@ export class UserService {
       to: data.email,
       subject: "[ICPlan] Verify your Email",
       from: "no-reply@icplan.com",
-      bcc: appEnv("SMTP_BCC"),
+      bcc: this.configService.get("SMTP_BCC"),
     };
 
     this.mailService.SendMail(
@@ -1632,7 +1624,7 @@ export class UserService {
 
         qrCode = await qrcode.toDataURL(generateSecret.otpauth_url);
         if (!qrCode) {
-          throw new NotAcceptableError(
+          throw new NotAcceptableException(
             "Couldn't genereate QR code, please try again."
           );
         }
@@ -1658,8 +1650,7 @@ export class UserService {
       } else {
         //case of already enabled or disabled
         const message_keyword = is_mfa_enabled ? "enabled" : "disabled";
-        throw new HttpError(
-          ResponseCode.BAD_REQUEST,
+        throw new BadRequestException(
           `Your MFA is already ${message_keyword}.`
         );
       }
@@ -1879,11 +1870,7 @@ export class UserService {
     }
     if (mfa_code) {
       if (!user.mfa_secret && !user.mfa_secret.secret) {
-        Sentry.captureMessage("MFA verification failed.", {
-          user: { id: user.Id.toString() },
-          // level: Sentry.Severity.Warning,
-        });
-        throw new UnauthorizedError("MFA verification code failed.");
+        throw new UnauthorizedException("MFA verification code failed.");
       }
       twoFactorAuthentication = speakeasy.totp.verify({
         secret: user.mfa_secret.secret,
@@ -1892,13 +1879,6 @@ export class UserService {
       });
     }
 
-    if (!twoFactorAuthentication) {
-      Sentry.captureMessage("MFA verification failed.", {
-        user: { id: user.Id.toString() },
-        level: "warning",
-      });
-      throw new UnauthorizedError("MFA verification code failed.");
-    }
     token = this.generateToken(user.Id, user.company_id);
     await this.setSession(token, user.Id, user.company_id, user.role);
 
@@ -2000,8 +1980,8 @@ export class UserService {
   public async CognitoLogin(idToken: string) {
     let firstTimeLogin = false;
 
-    let data = await this.redisService.Get(`SSO-${idToken}`);
-    data = JSON.parse(data);
+    let ssoData = await this.redisService.Get(`SSO-${idToken}`);
+    let data = JSON.parse(ssoData);
 
     // TODO: Cognito flow
     // data = await verifier.verify(idToken.toString());

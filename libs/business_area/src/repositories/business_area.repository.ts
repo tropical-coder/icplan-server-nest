@@ -2,18 +2,19 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { BaseRepository } from "@app/common/base/base.repository";
-import { BusinessAreaModel } from "../../model/business_area/BusinessAreaModel";
-import { BusinessAreaSearchRequest, GetBusinessAreasRequest } from "../../../api/controller/business_area/BusinessAreaRequest";
-import {
-import { IRedisUserModel, UserRoles } from "../../model/user/UserModel";
-import { UserBusinessAreasSearchRequest } from "../../../api/controller/user/UserRequest";
+import { GetPaginationOptions, filterRawQueryParams, doApplyBusinessAreaPermission } from "@app/common/helpers/misc.helper";
+import { UserBusinessAreasSearchRequest } from "@app/user/dtos/user.dto";
+import { IRedisUserModel, UserRoles } from "@app/user/entities/user.entity";
+import { GetBusinessAreasRequest, BusinessAreaSearchRequest } from "../dtos/business_area.dto";
+import { BusinessAreaModel } from "../entities/business_area.entity";
 
-export class BusinessAreaRepository extends BaseRepository<[^> {
+@Injectable()
+export class BusinessAreaRepository extends BaseRepository<BusinessAreaModel> {
   constructor(
     @InjectRepository(BusinessAreaModel)
     private businessAreaModelRepository: Repository<BusinessAreaModel>,
   ) {
-    super([^Repository);
+    super(businessAreaModelRepository);
   }
 
   public async GetBusinessAreas(

@@ -17,18 +17,14 @@ import {
   OrderDirectionRequest,
   PaginationParam,
   Subdomain,
-} from "../../../app/controller/base/BaseRequest";
-import { PlanStatus } from "../../../app/model/plan/PlanModel";
-import {
-  IsValidDate,
-  IsDateGreaterThanEqual,
-} from "../../../app/decorator/DateValidator";
-import { UserPermission } from "../../../app/model/user/business_area_permission/UserBusinessAreaPermissionModel";
-import { PostStatus } from "../../../app/model/social-post/SocialPostModel";
+} from "@app/common/base/base.dto";
+import { PlanStatus } from "../entities/plan.entity";
 import { Type } from "class-transformer";
-import { IsNotBlank } from "../../../app/decorator/IsNotBlank";
-import { IsValidStatus } from "../../../app/decorator/IsValidStatus";
-import { CommunicationStatus } from "../../../app/model/communication/CommunicationModel";
+import { IsNotBlank } from "@app/common/decorators/is-not-blank.decorator";
+import { IsDateGreaterThanEqual, IsValidDate } from "@app/common/decorators/date-validator.decorator";
+import { IsValidStatus } from "@app/common/decorators/is-valid-status.decorator";
+import { CommunicationStatus } from "@app/communication/entities/communication.entity";
+import { UserPermission } from "@app/business_area/entities/user_business_area_permission.entity";
 
 export enum PlanOrderColumnRequest {
   Title = "title",
@@ -481,11 +477,6 @@ export class DuplicatePlanRequest {
   @IsOptional()
   @IsBoolean()
   duplicate_plan_on_page: boolean;
-}
-
-export class GetPlanSocialPostsRequest extends PaginationParam {
-  @IsOptional()
-  status: PostStatus;
 }
 export class AddPlanToFolderRequest {
   @IsNotEmpty()

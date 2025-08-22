@@ -8,7 +8,7 @@ import {
   IsBoolean,
   Length,
 } from "class-validator";
-import { PaginationParam } from "@app/common/base/base.request";
+import { PaginationParam } from "@app/common/base/base.dto";
 
 export class ValidatePhoneNumberRequest {
   @IsNotEmpty()

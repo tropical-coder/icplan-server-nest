@@ -3,7 +3,7 @@ import { ApiTags } from "@nestjs/swagger";
 import type { IRedisAdminModel } from "@app/administrator/entities/administrator.entity";
 import { UserService } from "@app/user/user.service";
 import { Authorized } from "@app/common/decorators/authorized.decorator";
-import { AddUserRequest, GetAllUsersRequest, RevokeMfa } from "@app/user/dto/user.dto";
+import { AdminAddUserRequest, GetAllUsersRequest, RevokeMfa } from "@app/user/dtos/user.dto";
 import type { Request } from "express";
 import { CurrentUser } from "@app/common/decorators/current-user.decorator";
 
@@ -25,7 +25,7 @@ export class UserController {
   @Authorized()
   @Post("/user/add")
   async AddUserToCompany(
-    @Body() data: AddUserRequest,
+    @Body() data: AdminAddUserRequest,
     @Req() req: Request,
   ): Promise<any> {
     data.email = data.email.toLowerCase();
@@ -60,7 +60,7 @@ export class UserController {
   @Put("/user/:userId")
   async UpdateUser(
     @Param("userId") userId: number,
-    @Body() data: AddUserRequest,
+    @Body() data: AdminAddUserRequest,
     @CurrentUser()
     user: IRedisAdminModel
   ): Promise<any> {

@@ -1,9 +1,10 @@
+import { BaseModel } from '@app/common/base/base.model';
 import { Column, Entity, OneToMany, JoinColumn, ManyToMany, JoinTable, ManyToOne, RelationCount } from 'typeorm';
-import { BaseModel } from '../BaseModel';
-import { AudienceModel } from '../audience/AudienceModel';
-import { ChannelModel } from '../channel/ChannelModel';
-import { UserBusinessAreaPermissionModel } from '../user/business_area_permission/UserBusinessAreaPermissionModel';
-import { CompanyModel } from '../company/CompanyModel';
+import { UserBusinessAreaPermissionModel } from './user_business_area_permission.entity';
+import { ChannelModel } from '@app/channel/entities/channel.entity';
+import { AudienceModel } from '@app/audience/entities/audience.entity';
+import { CompanyModel } from '@app/company/entities/company.entity';
+
 
 @Entity('business_area')
 export class BusinessAreaModel extends BaseModel {

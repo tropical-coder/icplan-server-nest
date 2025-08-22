@@ -1,7 +1,7 @@
 import { Column, Entity, OneToOne, ManyToOne, JoinColumn, } from 'typeorm';
 import Stripe from 'stripe';
 import { BaseModel } from '@app/common/base/base.model';
-import { Features } from '../dto/subscription.dto';
+import { Features } from '../dtos/subscription.dto';
 import { CompanyModel } from '@app/company/entities/company.entity';
 import { PackagePriceModel } from '@app/package/entities/package-price.entity';
 import { PackageModel } from '@app/package/entities/package.entity';

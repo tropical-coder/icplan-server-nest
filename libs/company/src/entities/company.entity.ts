@@ -1,9 +1,7 @@
 import { AudienceModel } from "@app/audience/entities/audience.entity";
-import { BusinessAreaModel } from "@app/business_area/entities/business-area.entity";
 import { ChannelModel } from "@app/channel/entities/channel.entity";
 import { GetFileKey, GetAWSSignedUrl } from "@app/common/helpers/media.helper";
 import { CommunicationModel } from "@app/communication/entities/communication.entity";
-import { ContentTypeModel } from "@app/content_type/entities/content-type.entity";
 import { LocationModel } from "@app/location/entities/location.entity";
 import { PlanModel } from "@app/plan/entities/plan.entity";
 import { StrategicPriorityModel } from "@app/strategic_priority/entities/strategic-priority.entity";
@@ -12,6 +10,11 @@ import { TaskModel } from "@app/task/entities/task.entity";
 import { UserModel } from "@app/user/entities/user.entity";
 import { TagModel } from "@app/tag/entities/tag.entity";
 import { AfterLoad, Column, Entity, OneToMany, OneToOne } from "typeorm";
+import { BaseModel } from "@app/common/base/base.model";
+import { ContentTypeModel } from "@app/content_type/entities/content_type.entity";
+import { BusinessAreaModel } from "@app/business_area/entities/business_area.entity";
+import { KeyMessagesModel } from "@app/key_messages/entities/key_messages.entity";
+import { CompanyUserLicenseModel } from "./company_user_license.entity";
 
 export enum SecondaryCalendarView {
   GanttChart = "gantt_chart",
@@ -35,7 +38,7 @@ export enum CalendarFormat {
   ThirteenMonth = 2,
 }
 @Entity("company")
-export class CompanyModel {
+export class CompanyModel extends BaseModel {
   @Column({
     name: "name",
     type: "varchar",
@@ -252,8 +255,6 @@ export class CompanyModel {
 
   location_count: number;
 
-  skill_count: number;
-
   strategic_priority_count: number;
 
   tag_count: number;
@@ -282,11 +283,11 @@ export class CompanyModel {
   )
   subscription: SubscriptionModel;
 
-  @OneToOne(() => MfaEnabledCompaniesModel, (mfaCompany) => mfaCompany.company)
-  mfa_company: MfaEnabledCompaniesModel;
+  // @OneToOne(() => MfaEnabledCompaniesModel, (mfaCompany) => mfaCompany.company)
+  // mfa_company: MfaEnabledCompaniesModel;
 
-  @OneToOne(() => SsoEnabledCompaniesModel, (ssoCompany) => ssoCompany.company)
-  sso_company: SsoEnabledCompaniesModel;
+  // @OneToOne(() => SsoEnabledCompaniesModel, (ssoCompany) => ssoCompany.company)
+  // sso_company: SsoEnabledCompaniesModel;
 
   @OneToMany(
     () => KeyMessagesModel,
@@ -314,9 +315,6 @@ export class CompanyModel {
 
   @OneToMany((type) => LocationModel, (locationModel) => locationModel.company)
   location: LocationModel;
-
-  @OneToMany((type) => SkillModel, (skillModel) => skillModel.company)
-  skill: SkillModel;
 
   @OneToMany(
     (type) => StrategicPriorityModel,

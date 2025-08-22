@@ -95,6 +95,15 @@
         "tsConfigPath": "libs/color/tsconfig.lib.json"
       }
     },
+    "comment": {
+      "type": "library",
+      "root": "libs/comment",
+      "entryFile": "index",
+      "sourceRoot": "libs/comment/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/comment/tsconfig.lib.json"
+      }
+    },
     "common": {
       "type": "library",
       "root": "libs/common",

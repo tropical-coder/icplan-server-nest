@@ -33,7 +33,11 @@ export class RedisService {
 
   public async Get(key: string | number) {
     key = `${this.prefix}-${key}`;
-    return await this.connection.get(key);
+    const result = await this.connection.get(key);
+    if (result) {
+      return result.toString();
+    }
+    return null;
   }
 
   public async ExpireAt(key: string | number, timeStamp: number) {

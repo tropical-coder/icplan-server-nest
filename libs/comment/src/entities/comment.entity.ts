@@ -1,8 +1,8 @@
+import { BaseModel } from "@app/common/base/base.model";
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import { BaseModel } from "../BaseModel";
-import { UserModel } from "../user/UserModel";
-import { PlanModel } from "../plan/PlanModel";
-import { CommunicationModel } from "../communication/CommunicationModel";
+import { UserModel } from "@app/user/entities/user.entity";
+import { PlanModel } from "@app/plan/entities/plan.entity";
+import { CommunicationModel } from "@app/communication/entities/communication.entity";
 
 @Entity("comment")
 export class CommentModel extends BaseModel {

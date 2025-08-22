@@ -1,14 +1,13 @@
 import {
   In,
-  IsNull,
   Repository,
   UpdateResult,
   DeleteResult,
-  FindManyOptions,
   FindOptionsWhere,
   ObjectType,
 } from 'typeorm';
 import { BaseModel } from './base.model';
+import { SimpleRepository } from './simple.repository';
 
 export interface PaginationRequestParams {
   limit?: number;
@@ -20,25 +19,15 @@ export interface PaginationDBParams {
   offset: number;
 }
 
-export abstract class BaseRepository<T extends BaseModel> {
+export abstract class BaseRepository<T extends BaseModel> extends SimpleRepository<T> {
   protected Model: ObjectType<T>;
   protected ConnectionName: string;
   protected DefaultOrderByColumn: string = "Id";
   protected DefaultOrderByDirection: string = "ASC";
   protected PrimaryColumnKey: string = "Id";
 
-  constructor(protected Repository: Repository<T>) {}
-
-  protected ApplyPagination(
-    whereParams: any,
-    options?: PaginationDBParams
-  ): any {
-    if (options && options.limit != -1) {
-      whereParams.take = options.limit;
-      whereParams.skip = options.offset;
-    }
-
-    return whereParams;
+  constructor(protected Repository: Repository<T>) {
+    super(Repository);
   }
 
   protected GetPrimaryColumnKey() {
@@ -51,44 +40,6 @@ export abstract class BaseRepository<T extends BaseModel> {
 
   protected InOperator(val): any {
     return In(val);
-  }
-
-  protected PrepareParams(
-    whereParams?: FindOptionsWhere<T> | FindOptionsWhere<T>[] | null,
-    _options?: PaginationDBParams
-  ): FindOptionsWhere<T> | FindOptionsWhere<T>[] {
-    const normalize = (input: Record<string, unknown>): Record<string, unknown> => {
-      const out: Record<string, unknown> = {};
-      for (const [key, val] of Object.entries(input)) {
-        if (val === undefined) continue;
-        if (Array.isArray(val)) {
-          out[key] = this.InOperator(val);
-        } else if (val === null) {
-          out[key] = IsNull();
-        } else {
-          out[key] = val;
-        }
-      }
-      return out;
-    };
-
-    if (!whereParams) {
-      return {} as FindOptionsWhere<T>;
-    }
-
-    if (Array.isArray(whereParams)) {
-      return whereParams.map(w => normalize(w as Record<string, unknown>)) as FindOptionsWhere<T>[];
-    }
-
-    return normalize(whereParams as Record<string, unknown>) as FindOptionsWhere<T>;
-  }
-
-  protected ApplyRelations(param, relations) {
-    if (!relations) {
-      return param;
-    }
-    param.relations = relations;
-    return param;
   }
 
   protected ApplyOrder(
@@ -126,10 +77,6 @@ export abstract class BaseRepository<T extends BaseModel> {
     return await this.Save(instance);
   }
 
-  public async CreateAll(instance: T[]) {
-    return await this.SaveAll(instance);
-  }
-
   public async FindById(Id?: number | string, params?: any) {
     return await this.Repository.findOne({ where: { Id: Id }, ...params });
   }
@@ -151,13 +98,6 @@ export abstract class BaseRepository<T extends BaseModel> {
     return await this.Repository.find(params);
   }
 
-  public async FindOne(whereParams, params?) {
-    return await this.Repository.findOne({
-      where: whereParams,
-      ...params,
-    });
-  }
-
   public async FindAndCount(
     whereParams,
     options?: PaginationDBParams,
@@ -170,19 +110,7 @@ export abstract class BaseRepository<T extends BaseModel> {
     params = this.ApplyOrder(params, whereParams.order);
     params = this.ApplyRelations(params, relations);
 
-    return await this.Repository.findAndCount(params as FindManyOptions);
-  }
-
-  public async Save(instance: T): Promise<T> {
-    return (await this.Repository.save(instance as any)) as T;
-  }
-
-  public async SaveAll(instance: T[]) {
-    return (await this.Repository.save(instance as any)) as T[];
-  }
-
-  public async Update(condition: FindOptionsWhere<T>, updateObject) {
-    return await this.Repository.update(condition, updateObject as any);
+    return await this.Repository.findAndCount(params as any);
   }
 
   public async Delete(
@@ -195,7 +123,7 @@ export abstract class BaseRepository<T extends BaseModel> {
       } as any);
     } else {
       //TODO: We have remove function as well.
-      return await this.Repository.delete(param);
+      return await super.Delete(param);
     }
   }
 
@@ -218,17 +146,6 @@ export abstract class BaseRepository<T extends BaseModel> {
     const idList = ids.map(id => ({ Id: id }));
 
     return await this.Delete(idList, softDelete);
-  }
-
-  public async Upsert(
-    instance: T | T[], 
-    conflictCols: string[]
-  ) {
-    return await this.Repository.upsert(instance as any, conflictCols);
-  }
-
-  public async Count(where?: any) {
-    return await this.Repository.count({ where });
   }
 
   public async UpdateManyToManyRelation<R extends { Id: number | string }>(

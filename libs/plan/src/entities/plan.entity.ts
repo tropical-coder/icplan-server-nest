@@ -1,3 +1,11 @@
+import { BusinessAreaModel } from "@app/business_area/entities/business_area.entity";
+import { BaseModel } from "@app/common/base/base.model";
+import { CommunicationModel } from "@app/communication/entities/communication.entity";
+import { PlanFilesModel } from "@app/file/entities/plan_files.entity";
+import { ParentFolderModel } from "@app/parent_folder/entities/parent_folder.entity";
+import { StrategicPriorityModel } from "@app/strategic_priority/entities/strategic-priority.entity";
+import { TagModel } from "@app/tag/entities/tag.entity";
+import { UserModel } from "@app/user/entities/user.entity";
 import {
   Column,
   Entity,
@@ -9,26 +17,16 @@ import {
   OneToOne,
   BeforeInsert,
 } from "typeorm";
-import { BaseModel } from "../BaseModel";
-import { BusinessAreaModel } from "../business_area/BusinessAreaModel";
-import { TagModel } from "../tag/TagModel";
-import { CommunicationModel } from "../communication/CommunicationModel";
-import { UserModel } from "../user/UserModel";
-import { PlanFilesModel } from "./PlanFilesModel";
-import { CurrencyModel } from "../currency/CurrencyModel";
-import { StrategicPriorityModel } from "../strategic_priority/StrategicPriorityModel";
-import { PlanPermissionModel } from "./PlanPermissionModel";
-import { ParentFolderModel } from "../parent_folder/ParentFolderModel";
-import { TaskModel } from "../task/TaskModel";
-import { PlanTeamModel } from "./PlanTeamModel";
-import { PlanOwnerModel } from "./PlanOwnerModel";
-import { PhaseModel } from "../phase/PhaseModel";
-import { CompanyModel } from "../company/CompanyModel";
-import { PlanOnPageModel } from "./PlanOnPageModel";
-import { RiskModel } from "../risk/RiskModel";
-import { BudgetModel } from "../budget/BudgetModel";
-import { CommentModel } from "../comment/CommentModel";
-
+import { PlanPermissionModel } from "./plan_permission.entity";
+import { TaskModel } from "@app/task/entities/task.entity";
+import { PhaseModel } from "@app/phase/entities/phase.entity";
+import { PlanOnPageModel } from "./plan_on_page.entity";
+import { RiskModel } from "@app/risk/entities/risk.entity";
+import { BudgetModel } from "@app/budget/entities/budget.entity";
+import { CommentModel } from "@app/comment/entities/comment.entity";
+import { CompanyModel } from "@app/company/entities/company.entity";
+import { PlanTeamModel } from "./plan_team.entity";
+import { PlanOwnerModel } from "./plan_owner.entity";
 export enum PlanStatus {
   Planned = "planned",
   InProgress = "in_progress",
@@ -131,13 +129,6 @@ export class PlanModel extends BaseModel {
     default: PlanStatus.InProgress,
   })
   status: PlanStatus;
-
-  @Column({
-    name: "currency_id",
-    type: "int",
-    nullable: true,
-  })
-  currency_id: number;
 
   @Column({
     name: "objectives",
@@ -284,10 +275,6 @@ export class PlanModel extends BaseModel {
     inverseJoinColumn: { name: "strategic_priority_id" },
   })
   strategic_priorities: StrategicPriorityModel[];
-
-  @ManyToOne((type) => CurrencyModel)
-  @JoinColumn({ name: "currency_id" })
-  currency: CurrencyModel;
 
   @ManyToOne((type) => ParentFolderModel)
   @JoinColumn({ name: "parent_folder_id" })

@@ -12,7 +12,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Authorized } from "@app/common/decorators/authorized.decorator";
 import { CurrentUser } from "@app/common/decorators/current-user.decorator";
 import { ContentTypeService } from "@app/content_type/content_type.service";
-import { PaginationParam } from "@app/common/base/base.request";
+import { PaginationParam } from "@app/common/base/base.dto";
 
 @ApiTags("Content Type")
 @Controller()

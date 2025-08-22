@@ -3,6 +3,5 @@
   "typescript.suggest.autoImports": true,
   "typescript.suggest.includeAutomaticOptionalChainCompletions": true,
   "typescript.preferences.importModuleSpecifier": "shortest",
-  "typescript.suggest.includeCompletionsForModuleExports": true,
   "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -1,6 +1,7 @@
+import { BaseModel } from '@app/common/base/base.model';
+import { CompanyModel } from '@app/company/entities/company.entity';
 import { Column, Entity, OneToMany, JoinColumn, ManyToOne, RelationCount } from 'typeorm';
-import { BaseModel } from '../BaseModel';
-import { CompanyModel } from '../company/CompanyModel';
+
 
 @Entity('location')
 export class LocationModel extends BaseModel {

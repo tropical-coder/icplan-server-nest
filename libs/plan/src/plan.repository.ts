@@ -1,21 +1,26 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
-import { Repository } from "typeorm";
-import { PlanAndCommunicationSearchRequest } from "../../../api/controller/plan/PlanRequest";
+import { Brackets, Repository, SelectQueryBuilder } from "typeorm";
 import { BaseRepository } from "@app/common/base/base.repository";
-import { PlanModel, PlanStatus, RAGBStatus } from "../../model/plan/PlanModel";
-import {
-import { CommunicationStatus } from "../../model/communication/CommunicationModel";
-import {
-import { IRedisUserModel, UserRoles } from "../../model/user/UserModel";
-import {
+import { PlanModel, PlanStatus, RAGBStatus } from "./entities/plan.entity";
+import { IRedisUserModel, UserRoles } from "@app/user/entities/user.entity";
+import { CommunicationStatus } from "@app/communication/entities/communication.entity";
+import { statusConfig } from "@app/common/constants/status.constant";
+import { GetFileKey, GetAWSSignedUrl } from "@app/common/helpers/media.helper";
+import { doApplyBusinessAreaPermission, GetPaginationOptions, JoinArrays, filterQBParams, filterRawQueryParams, DeepClone } from "@app/common/helpers/misc.helper";
+import { CompanyModel } from "@app/company/entities/company.entity";
+import { GetParentFolderAndPlanRequest, ParentFolderPage } from "@app/parent_folder/dtos/parent_folder.dto";
+import { AnalyticsRequest } from "libs/analytics/src/dtos/analytics.dto";
+import { GetPlanRequest, PlanSearchRequest, PlanAndCommunicationSearchRequest } from "./dto/plan.dto";
+import { NotificationRuleEntity } from "@app/notification/entities/notification_rule.entity";
 
-export class PlanRepository extends BaseRepository<[^> {
+@Injectable()
+export class PlanRepository extends BaseRepository<PlanModel> {
   constructor(
     @InjectRepository(PlanModel)
     private planModelRepository: Repository<PlanModel>,
   ) {
-    super([^Repository);
+    super(planModelRepository);
   }
 
   public async GetPlanCommunicationCount(
